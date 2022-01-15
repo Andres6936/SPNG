@@ -13,17 +13,23 @@ option(SPNG_STATIC "Build static lib" ON)
 option(BUILD_EXAMPLES "Build examples" ON)
 
 include(GNUInstallDirs)
+INCLUDE(CMakeModules/CPM.cmake)
 
-find_package(ZLIB REQUIRED)
-include_directories(${ZLIB_INCLUDE_DIRS})
+
+# In this case, the name of the NAME variable is important.
+# because it will be used to determine the path where the
+# source code of the project is located.
+CPMAddPackage(
+        NAME ZLIB
+        GITHUB_REPOSITORY madler/zlib
+        VERSION 1.2.11
+)
+
+INCLUDE_DIRECTORIES(${ZLIB_BINARY_DIR})
+INCLUDE_DIRECTORIES(${ZLIB_SOURCE_DIR})
+INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/spng)
 
 set(spng_SOURCES spng/spng.c)
-
-if(NOT CMAKE_HOST_WIN32)
-    set(spng_LIBS -lm ${ZLIB_LIBRARIES})
-else()
-    set(spng_LIBS ${ZLIB_LIBRARIES})
-endif()
 
 if(NOT ENABLE_OPT)
     add_definitions( -DSPNG_DISABLE_OPT=1 )
@@ -31,13 +37,13 @@ endif()
 
 if(SPNG_SHARED)
     add_library(spng SHARED ${spng_SOURCES})
-    target_link_libraries(spng ${spng_LIBS})
+    target_link_libraries(spng zlib)
     install(TARGETS spng DESTINATION lib)
 
     if(BUILD_EXAMPLES)
-        add_executable(example examples/example.c)
-        target_include_directories(example PRIVATE ${PROJECT_SOURCE_DIR}/spng)
-        target_link_libraries(example spng ${spng_LIBS})
+        add_executable(examples examples/example.c)
+        target_include_directories(example PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/spng)
+        target_link_libraries(examples spng zlib)
     endif()
 endif()
 

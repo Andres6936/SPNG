@@ -12,3 +12,6 @@
 /trash/
 /tests/formal/
 /site/
+.idea/
+CMakeFiles/
+cmake-build*/

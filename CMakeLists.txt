@@ -44,6 +44,11 @@ if(SPNG_SHARED)
         add_executable(examples examples/example.c)
         target_include_directories(example PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/spng)
         target_link_libraries(examples spng zlib)
+
+        add_custom_command(TARGET examples POST_BUILD
+                COMMAND ${CMAKE_COMMAND} -E copy_directory
+                "${ZLIB_BINARY_DIR}"
+                $<TARGET_FILE_DIR:examples>)
     endif()
 endif()
 

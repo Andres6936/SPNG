@@ -73,3 +73,5 @@ if (NOT CMAKE_HOST_WIN32 OR CYGWIN OR MINGW)
 
     install(FILES ${CMAKE_CURRENT_BINARY_DIR}/tests/libspng.pc DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
 endif ()
+
+add_subdirectory(tests/)

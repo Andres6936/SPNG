@@ -66,7 +66,7 @@
 
         #if defined(SPNG_ARM)
         static uint32_t expand_palette_rgba8_neon(unsigned char *row, const unsigned char *scanline, const unsigned char *plte, uint32_t width);
-        /*static uint32_t expand_palette_rgb8_neon(unsigned char *row, const unsigned char *scanline, const unsigned char *plte, uint32_t width);*/
+        static uint32_t expand_palette_rgb8_neon(unsigned char *row, const unsigned char *scanline, const unsigned char *plte, uint32_t width);
         #endif
     #endif
 #endif
@@ -124,6 +124,9 @@ enum spng__internal
     int ret = read_chunks(ctx, 0); \
     if(ret) return ret
 
+/* Determine if the spng_option can be overriden/optimized */
+#define spng__optimize(option) (ctx->optimize_option & (1 << option))
+
 struct spng_subimage
 {
     uint32_t width;
@@ -169,7 +172,7 @@ struct encode_flags
     unsigned progressive:    1;
     unsigned finalize:       1;
 
-    int filter_choice;
+    enum spng_filter_choice filter_choice;
 };
 
 struct spng_chunk_bitfield
@@ -299,6 +302,8 @@ struct spng_ctx
 
     int crc_action_critical;
     int crc_action_ancillary;
+
+    uint32_t optimize_option;
 
     struct spng_ihdr ihdr;
 
@@ -1883,7 +1888,7 @@ static void expand_row(unsigned char *row,
     if(fmt == SPNG_FMT_RGBA8) i = expand_palette_rgba8_neon(row, scanline, decode_plte->raw, width);
     else if(fmt == SPNG_FMT_RGB8)
     {
-        /*i = expand_palette_rgb8_neon(row, scanline, decode_plte->raw, width);*/
+        i = expand_palette_rgb8_neon(row, scanline, decode_plte->raw, width);
 
         for(; i < width; i++)
         {/* In this case the LUT is 3 bytes packed */
@@ -4600,7 +4605,7 @@ static int encode_row(spng_ctx *ctx, const void *row, size_t len)
         const unsigned char *row_uc = row;
         uint8_t sample;
 
-        memset(scanline, 0, len);
+        memset(scanline, 0, ctx->subimage[pass].scanline_width);
 
         for(k=0; k < ctx->subimage[pass].width; k++)
         {
@@ -4719,23 +4724,28 @@ int spng_encode_image(spng_ctx *ctx, const void *img, size_t len, int fmt, int f
     if(ihdr->bit_depth < 8) ctx->bytes_per_pixel = 1;
     else ctx->bytes_per_pixel = ctx->channels * (ihdr->bit_depth / 8);
 
-    if(!ctx->image_options.compression_level)
+    if(spng__optimize(SPNG_FILTER_CHOICE))
     {
-        encode_flags->filter_choice = 0; /* Filtering would make no difference */
+        /* Filtering would make no difference */
+        if(!ctx->image_options.compression_level)
+        {
+            encode_flags->filter_choice = SPNG_DISABLE_FILTERING;
+        }
+
+        /* Palette indices and low bit-depth images do not benefit from filtering */
+        if(ihdr->color_type == SPNG_COLOR_TYPE_INDEXED || ihdr->bit_depth < 8)
+        {
+            encode_flags->filter_choice = SPNG_DISABLE_FILTERING;
+        }
     }
 
-    if(ihdr->color_type == SPNG_COLOR_TYPE_INDEXED || ihdr->bit_depth < 8)
-    {
-        encode_flags->filter_choice = 0;
-    }
-
-    /* This is the same as disabling filtering */
+    /* This is technically the same as disabling filtering */
     if(encode_flags->filter_choice == SPNG_FILTER_CHOICE_NONE)
     {
-        encode_flags->filter_choice = 0;
+        encode_flags->filter_choice = SPNG_DISABLE_FILTERING;
     }
 
-    if(!encode_flags->filter_choice)
+    if(!encode_flags->filter_choice && spng__optimize(SPNG_IMG_COMPRESSION_STRATEGY))
     {
         ctx->image_options.strategy = Z_DEFAULT_STRATEGY;
     }
@@ -4882,6 +4892,7 @@ spng_ctx *spng_ctx_new2(struct spng_alloc *alloc, int flags)
     ctx->image_options = image_defaults;
     ctx->text_options = text_defaults;
 
+    ctx->optimize_option = ~0;
     ctx->encode_flags.filter_choice = SPNG_FILTER_CHOICE_ALL;
 
     ctx->flags = flags;
@@ -5211,7 +5222,7 @@ int spng_set_option(spng_ctx *ctx, enum spng_option option, int value)
             if(!ctx->encode_only) return SPNG_ECTXTYPE;
             if(ctx->state >= SPNG_STATE_OUTPUT) return SPNG_EOPSTATE;
 
-            if(!value) return 0;
+            if(!value) break;
 
             ctx->internal_buffer = 1;
             ctx->state = SPNG_STATE_OUTPUT;
@@ -5220,6 +5231,9 @@ int spng_set_option(spng_ctx *ctx, enum spng_option option, int value)
         }
         default: return 1;
     }
+
+    /* Option can no longer be overriden by the library */
+    if(option < 32) ctx->optimize_option &= ~(1 << option);
 
     return 0;
 }
@@ -6867,39 +6881,40 @@ static void defilter_paeth4(size_t rowbytes, unsigned char *row, const unsigned 
 /* Expands a palettized row into RGBA8. */
 static uint32_t expand_palette_rgba8_neon(unsigned char *row, const unsigned char *scanline, const unsigned char *plte, uint32_t width)
 {
-    const uint32_t stride = 4;
+    const uint32_t scanline_stride = 4;
+    const uint32_t row_stride = scanline_stride * 4;
+    const uint32_t count = width / scanline_stride;
     const uint32_t *palette = (const uint32_t*)plte;
 
-    if(width < stride) return 0;
+    if(!count) return 0;
 
     uint32_t i;
-    for(i=0; i < width; i += stride, scanline += stride, row += stride * 4)
+    uint32x4_t cur;
+    for(i=0; i < count; i++, scanline += scanline_stride)
     {
-        uint32x4_t cur;
         cur = vld1q_dup_u32 (palette + scanline[0]);
         cur = vld1q_lane_u32(palette + scanline[1], cur, 1);
         cur = vld1q_lane_u32(palette + scanline[2], cur, 2);
         cur = vld1q_lane_u32(palette + scanline[3], cur, 3);
-        vst1q_u32((void*)row, cur);
+        vst1q_u32((uint32_t*)(row + i * row_stride), cur);
     }
 
-    /* Remove the amount that wasn't processed. */
-    if(i != width) i -= stride;
-
-    return i;
+    return count * scanline_stride;
 }
-#if 0 /* Disabled pending a fix in the next version */
+
 /* Expands a palettized row into RGB8. */
 static uint32_t expand_palette_rgb8_neon(unsigned char *row, const unsigned char *scanline, const unsigned char *plte, uint32_t width)
 {
-    const uint32_t stride = 8;
+    const uint32_t scanline_stride = 8;
+    const uint32_t row_stride = scanline_stride * 3;
+    const uint32_t count = width / scanline_stride;
 
-    if(width <= stride) return 0;
+    if(!count) return 0;
 
     uint32_t i;
-    for(i=0; i < width; i += stride, scanline += stride, row += stride * 3)
+    uint8x8x3_t cur;
+    for(i=0; i < count; i++, scanline += scanline_stride)
     {
-        uint8x8x3_t cur;
         cur = vld3_dup_u8 (plte + 3 * scanline[0]);
         cur = vld3_lane_u8(plte + 3 * scanline[1], cur, 1);
         cur = vld3_lane_u8(plte + 3 * scanline[2], cur, 2);
@@ -6908,13 +6923,10 @@ static uint32_t expand_palette_rgb8_neon(unsigned char *row, const unsigned char
         cur = vld3_lane_u8(plte + 3 * scanline[5], cur, 5);
         cur = vld3_lane_u8(plte + 3 * scanline[6], cur, 6);
         cur = vld3_lane_u8(plte + 3 * scanline[7], cur, 7);
-        vst3_u8((void*)row, cur);
+        vst3_u8(row + i * row_stride, cur);
     }
 
-    /* Remove the amount that wasn't processed. */
-    if(i != width) i -= stride;
-
-    return i;
+    return count * scanline_stride;
 }
-#endif
+
 #endif /* SPNG_ARM */

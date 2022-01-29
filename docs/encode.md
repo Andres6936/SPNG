@@ -85,6 +85,11 @@ the internal buffer is freed by [spng_ctx_free()](context.md#spng_ctx_free).
 The alpha channel is always [straight alpha](https://en.wikipedia.org/wiki/Alpha_compositing#Straight_versus_premultiplied),
 premultiplied alpha is not supported.
 
+Compression level and other options can be customized with [`spng_set_option()`]([context.md#spng_set_option]).
+Note that encoder options are optimized based on PNG format and compression level,
+overriding other options such as filtering may disable some of these optimizations.
+
+
 ## Progressive image encoding
 
 If the `SPNG_ENCODE_PROGRESSIVE` flag is set the encoder will be initialized
@@ -113,7 +118,7 @@ for(i = 0; i < ihdr.height; i++)
 if(error == SPNG_EOI) /* success */
 ```
 
-But for interlaced images (`spng_ihdr.interlaced_method` set to `1`))
+But for interlaced images (`spng_ihdr.interlaced_method` set to `1`)
 rows are accessed multiple times and non-sequentially,
 use [spng_get_row_info()](context.md#spng_get_row_info) to get the current row number:
 

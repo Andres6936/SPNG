@@ -11,13 +11,13 @@
 lib**spng** (**s**imple **png**) is a C library for reading and writing Portable Network Graphics (PNG)
 format files with a focus on security and ease of use.
 
-libspng is an alternative to libpng, the projects are separate and the APIs are
-not compatible.
+libspng is an alternative to libpng, the projects are separate and the APIs are not compatible.
 
 ## Motivation
 
-The goal is to provide a fast PNG library with a simpler API than [libpng](https://github.com/glennrp/libpng/blob/libpng16/png.h),
-it outperforms the reference implementation in common use cases.
+The goal is to provide a fast PNG library with a simpler API
+than [libpng](https://github.com/glennrp/libpng/blob/libpng16/png.h), it outperforms the reference implementation in
+common use cases.
 
 ## Performance
 
@@ -36,7 +36,8 @@ it outperforms the reference implementation in common use cases.
 | Encoding                             | ✅      |  ✅               | ✅       | ✅      |
 | Animated PNG                         | Planned  |  ✅<sup>[3]</sup> | ❌       | ❌      |
 
-<sup>[1]</sup> The project is fuzz tested on [OSS-Fuzz](https://github.com/google/oss-fuzz) and vulnerabilities are fixed before they become public.
+<sup>[1]</sup> The project is fuzz tested on [OSS-Fuzz](https://github.com/google/oss-fuzz) and vulnerabilities are
+fixed before they become public.
 
 <sup>[2]</sup> Building with miniz is [supported](docs/build.md#miniz).
 
@@ -44,8 +45,8 @@ it outperforms the reference implementation in common use cases.
 
 ## Getting spng
 
-Download the [latest release](https://libspng.org/download) and include `spng.c/spng.h` in your project,
-you can also build with CMake or Meson, refer to the [documentation](docs/build.md) for details.
+Download the [latest release](https://libspng.org/download) and include `spng.c/spng.h` in your project, you can also
+build with CMake or Meson, refer to the [documentation](docs/build.md) for details.
 
 ## Usage
 
@@ -112,15 +113,14 @@ The project contains optimizations and test images from libpng, these are licens
 ## Security & Testing
 
 Code is written according to the rules of the
-[CERT C Coding Standard](https://wiki.sei.cmu.edu/confluence/display/c/SEI+CERT+C+Coding+Standard).
-All integer arithmetic is checked for overflow and all error conditions are handled gracefully.
+[CERT C Coding Standard](https://wiki.sei.cmu.edu/confluence/display/c/SEI+CERT+C+Coding+Standard). All integer
+arithmetic is checked for overflow and all error conditions are handled gracefully.
 
-The library is continuously fuzzed by [OSS-Fuzz](https://github.com/google/oss-fuzz),
-code is also scanned with Clang Static Analyzer, Coverity Scan and PVS-Studio.
+The library is continuously fuzzed by [OSS-Fuzz](https://github.com/google/oss-fuzz), code is also scanned with Clang
+Static Analyzer, Coverity Scan and PVS-Studio.
 
-The test suite consists of over 1000 test cases,
-175 [test images](http://www.schaik.com/pngsuite/) are decoded with all possible
-output format and flag combinations and compared against libpng for [correctness](tests/README.md#Correctness).
+The test suite consists of over 1000 test cases, 175 [test images](http://www.schaik.com/pngsuite/) are decoded with all
+possible output format and flag combinations and compared against libpng for [correctness](tests/README.md#Correctness).
 
 ## Versioning
 
@@ -137,14 +137,15 @@ Online documentation is available at [libspng.org/docs](https://libspng.org/docs
 
 ## Known Issues
 
-* Decoding to `SPNG_FMT_G8`, `SPNG_FMT_GA8` and `SPNG_FMT_GA16` output formats is not supported
- for all PNG color type and bit depth combinations, see documentation for details.
+* Decoding to `SPNG_FMT_G8`, `SPNG_FMT_GA8` and `SPNG_FMT_GA16` output formats is not supported for all PNG color type
+  and bit depth combinations, see documentation for details.
 * Gamma correction is not implemented for `SPNG_FMT_PNG`, `SPNG_FMT_G8`, `SPNG_FMT_GA8`
- and `SPNG_FMT_GA16` output formats.
+  and `SPNG_FMT_GA16` output formats.
 
 ## Supporting spng
 
-You can sponsor development through [OpenCollective](https://opencollective.com/libspng/), funds will be used for maintenance and further development according to the [roadmap](https://github.com/randy408/libspng/milestones).
+You can sponsor development through [OpenCollective](https://opencollective.com/libspng/), funds will be used for
+maintenance and further development according to the [roadmap](https://github.com/randy408/libspng/milestones).
 
 ### OpenCollective backers
 
@@ -154,7 +155,8 @@ You can sponsor development through [OpenCollective](https://opencollective.com/
 
 #### Organizations
 
-Support this project with your organization. Your logo will show up here with a link to your website. [[Contribute](https://opencollective.com/libspng/contribute)]
+Support this project with your organization. Your logo will show up here with a link to your
+website. [[Contribute](https://opencollective.com/libspng/contribute)]
 
 <a href="https://opencollective.com/libspng/sponsor/0/website"><img src="https://opencollective.com/libspng/sponsor/0/avatar.svg"></a>
 <a href="https://opencollective.com/libspng/sponsor/1/website"><img src="https://opencollective.com/libspng/sponsor/1/avatar.svg"></a>

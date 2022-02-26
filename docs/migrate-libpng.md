@@ -1,19 +1,18 @@
 # Contexts
 
-The context handle `spng_ctx` is an opaque datatype that holds all information,
-there is no separate info struct.
+The context handle `spng_ctx` is an opaque datatype that holds all information, there is no separate info struct.
 
-Create a new context with [`spng_ctx_new()`](context.md#spng_ctx_new) or [`spng_ctx_new2()`](context.md#spng_ctx_new2) to set a custom memory allocator.
+Create a new context with [`spng_ctx_new()`](context.md#spng_ctx_new) or [`spng_ctx_new2()`](context.md#spng_ctx_new2)
+to set a custom memory allocator.
 
 Contexts are decoders by default, to create an encoder use `SPNG_CTX_ENCODER` as context flag.
 
 `spng_ctx_free()` frees all context data.
 
-
 # Error handling
 
-All functions return zero on success and non-zero on error,
-decoding or encoding errors will invalidate the context and most subequent function calls will return
+All functions return zero on success and non-zero on error, decoding or encoding errors will invalidate the context and
+most subequent function calls will return
 `SPNG_EBADSTATE` to signal this.
 
 See also: [Decoder error handling](decode.md#error-handling)
@@ -21,7 +20,7 @@ See also: [Decoder error handling](decode.md#error-handling)
 # Limits
 
 !!! note
-    `cache_max` refers to an overall memory usage limit in spng.
+`cache_max` refers to an overall memory usage limit in spng.
 
 | libpng                       | spng                                                | Notes                    |
 |------------------------------|-----------------------------------------------------|--------------------------|
@@ -34,11 +33,9 @@ See also: [Decoder error handling](decode.md#error-handling)
 
 # Image information and chunk data
 
-!!! info
-    Image dimensions and other basic properties can be retrieved with [`spng_get_ihdr()`](chunk.md#spng_get_ihdr).
+!!! info Image dimensions and other basic properties can be retrieved with [`spng_get_ihdr()`](chunk.md#spng_get_ihdr).
 
-!!! note
-    Most chunk data is copied except for arbitrary length chunks (eXIf, text, sPLT, unknown chunks).
+!!! note Most chunk data is copied except for arbitrary length chunks (eXIf, text, sPLT, unknown chunks).
 
     Chunk lists are not copied, the reference must stay valid for the lifetime of the context.
 
@@ -99,15 +96,13 @@ See also: [Decoder error handling](decode.md#error-handling)
 
 ## Set source PNG
 
-!!! note
-    Push-style decoding is not supported in this release.
+!!! note Push-style decoding is not supported in this release.
 
 | libpng              | spng                                                      | Notes                   |
 |---------------------|-----------------------------------------------------------|-------------------------|
 | `png_set_read_fn()` | [`spng_set_png_stream()`](context.md#spng_set_png_stream) | Set PNG stream callback |
 | `png_init_io()`     | [`spng_set_png_file()`](context.md#spng_set_png_file)     | Set PNG file (`FILE*`)  |
 | N/A                 | [`spng_set_png_buffer()`](context.md#spng_set_png_buffer) | Set PNG buffer          |
-
 
 ## Decoder configuration
 
@@ -120,8 +115,7 @@ See also: [Decoder error handling](decode.md#error-handling)
 
 ### CRC action constants
 
-!!! note
-    Errors are only signalled through return values, spng never calls `abort()`.
+!!! note Errors are only signalled through return values, spng never calls `abort()`.
 
 | libpng                 | spng               | Action - critical   | Action - ancillary  |
 |------------------------|--------------------|---------------------|---------------------|
@@ -132,59 +126,55 @@ See also: [Decoder error handling](decode.md#error-handling)
 | `PNG_CRC_QUIET_USE`    | `SPNG_CRC_USE`     | use data            | use data            |
 | `PNG_CRC_NO_CHANGE`    | N/A                |                     |                     |
 
-
 ## Image formats and transforms
 
-Currently the library only works with source and destination formats,
-there are no transforms which change the output format based on the
-source PNG's format or other metadata like the tRNS chunk.
+Currently the library only works with source and destination formats, there are no transforms which change the output
+format based on the source PNG's format or other metadata like the tRNS chunk.
 
-Migrating from the traditional libpng API is straightforward if the desired output
-format is clearly defined, nonetheless some transforms (such as [Adding transparency](#adding-transparency))
+Migrating from the traditional libpng API is straightforward if the desired output format is clearly defined,
+nonetheless some transforms (such as [Adding transparency](#adding-transparency))
 can be implemented on top of the existing API.
 
-All [`spng_format`](context.md#spng_format)'s are explicit and host-endian (except for `SPNG_FMT_PNG` and `SPNG_FMT_RAW`),
-PNG formats are converted to the destination `spng_format` when decoding or
-converted from the `spng_format` to the destination PNG format when encoding.
-When the destination format has an alpha channel and the source doesn't the alpha samples
-are implicitly set to the fully opaque, maximum value.
-The alpha channel is always [straight alpha](https://en.wikipedia.org/wiki/Alpha_compositing#Straight_versus_premultiplied),
-premultiplied alpha is not supported.
+All [`spng_format`](context.md#spng_format)'s are explicit and host-endian (except for `SPNG_FMT_PNG`
+and `SPNG_FMT_RAW`), PNG formats are converted to the destination `spng_format` when decoding or converted from
+the `spng_format` to the destination PNG format when encoding. When the destination format has an alpha channel and the
+source doesn't the alpha samples are implicitly set to the fully opaque, maximum value. The alpha channel is
+always [straight alpha](https://en.wikipedia.org/wiki/Alpha_compositing#Straight_versus_premultiplied), premultiplied
+alpha is not supported.
 
-!!! note
-    Some source/destination combinations are not supported, check supported format, flags combinations for [decoding](decode.md#supported-format-flag-combinations) and [encoding](encode.md#supported-format-flag-combinations).
+!!! note Some source/destination combinations are not supported, check supported format, flags combinations
+for [decoding](decode.md#supported-format-flag-combinations)
+and [encoding](encode.md#supported-format-flag-combinations).
 
-`SPNG_FMT_PNG` represents the PNG's format specified in the header (IHDR chunk) in host-endian (ie. little-endian on x86),
-it is the equivalent of only calling `png_set_swap()` on little-endian when decoding or encoding.
-When decoding the output will always be host-endian, when encoding it is assumed
-the source image is host-endian.
+`SPNG_FMT_PNG` represents the PNG's format specified in the header (IHDR chunk) in host-endian (ie. little-endian on
+x86), it is the equivalent of only calling `png_set_swap()` on little-endian when decoding or encoding. When decoding
+the output will always be host-endian, when encoding it is assumed the source image is host-endian.
 
-`SPNG_FMT_RAW` is the same as `SPNG_FMT_PNG` but in big-endian,
-it is the same as not doing any transformations when decoding or encoding with libpng.
-The PNG standard only supports encoding of 16-bit images in big-endian, when used as the source
-format the library will assume the source image is big-endian.
-When decoding 16-bit images the output will always be big-endian.
+`SPNG_FMT_RAW` is the same as `SPNG_FMT_PNG` but in big-endian, it is the same as not doing any transformations when
+decoding or encoding with libpng. The PNG standard only supports encoding of 16-bit images in big-endian, when used as
+the source format the library will assume the source image is big-endian. When decoding 16-bit images the output will
+always be big-endian.
 
 Some decode flags may affect the final image but never the size or the layout of the samples within the pixels.
 
 ## Adding transparency
 
-This can be achieved by specifiying an output format with an alpha channel such as `SPNG_FMT_RGBA8` and the `SPNG_DECODE_TRNS` decode flag.
+This can be achieved by specifiying an output format with an alpha channel such as `SPNG_FMT_RGBA8` and
+the `SPNG_DECODE_TRNS` decode flag.
 
 ```c
 ret = spng_decode_image(ctx, out, len, SPNG_FMT_RGBA8, SPNG_DECODE_TRNS);
 ```
 
-Note that using `SPNG_DECODE_TRNS` does not result in an error if the image does not have a tRNS chunk or
-is not applicable for the PNG format/output format combination, in those cases the flag is ignored.
+Note that using `SPNG_DECODE_TRNS` does not result in an error if the image does not have a tRNS chunk or is not
+applicable for the PNG format/output format combination, in those cases the flag is ignored.
 
-The `png_set_tRNS_to_alpha()` function applies a tranforms which
-adds an alpha channel of the same bit depth if a tRNS chunk is present.
-It also implicitly converts indexed color images to 8-bit RGB,
-1/2/4-bit grayscale images to 8-bit grayscale and also adds an alpha channel
-if there is a tRNS chunk.
+The `png_set_tRNS_to_alpha()` function applies a tranforms which adds an alpha channel of the same bit depth if a tRNS
+chunk is present. It also implicitly converts indexed color images to 8-bit RGB, 1/2/4-bit grayscale images to 8-bit
+grayscale and also adds an alpha channel if there is a tRNS chunk.
 
-This transform can be implemented by choosing the equivalent output format and using `SPNG_DECODE_TRNS` to apply transparency:
+This transform can be implemented by choosing the equivalent output format and using `SPNG_DECODE_TRNS` to apply
+transparency:
 
 ```c
 int fmt = SPNG_FMT_PNG;
@@ -250,8 +240,7 @@ if(have_trns)
 
 See also: [Progressive image decoding](decode.md#progressive-image-decoding)
 
-!!! note
-    Row pointers (array of pointers) are not used.
+!!! note Row pointers (array of pointers) are not used.
 
 | libpng              | spng                                                   | Notes                               |
 |---------------------|--------------------------------------------------------|-------------------------------------|
@@ -259,7 +248,6 @@ See also: [Progressive image decoding](decode.md#progressive-image-decoding)
 | `png_write_image()` | [`spng_encode_image()`](encode.md#spng_decode_image)   |                                     |
 | `png_read_info()`   | [`spng_decode_chunks()`](decode.md#spng_decode_chunks) | Optional, chunks are read on-demand |
 | `png_read_end()`    | [`spng_decode_chunks()`](decode.md#spng_decode_chunks) | Optional, chunks are read on-demand |
-
 
 # Encode
 
@@ -270,7 +258,6 @@ See also: [Progressive image decoding](decode.md#progressive-image-decoding)
 | `png_set_write_fn()` | [`spng_set_png_stream()`](context.md#spng_set_png_stream)                   | Set PNG stream callback   |
 | `png_init_io()`      | [`spng_set_png_file()`](decode.md#spng_set_png_file)                        | Set PNG file (`FILE*`)    |
 | N/A                  | [`spng_set_option(ctx, SPNG_ENCODE_TO_BUFFER)`](context.md#spng_set_option) | Encode to internal buffer |
-
 
 ## Encoder configuration
 
@@ -297,13 +284,11 @@ See also: [Progressive image decoding](decode.md#progressive-image-decoding)
 | `png_get_chunk_malloc_max()`             | [`spng_get_chunk_limits()`](#spng_get_chunk_limits) | `chunk_size` argument                                        |
 | `png_set_quantize()`                     | N/A                                                 | Not supported                                                |
 
-
 ## Encoding images
 
 See also: [Progressive image encoding](encode.md#progressive-image-encoding)
 
-!!! note
-    Row pointers (array of pointers) are not used.
+!!! note Row pointers (array of pointers) are not used.
 
 | libpng                         | spng                                                   | Notes                                       |
 |--------------------------------|--------------------------------------------------------|---------------------------------------------|
@@ -335,7 +320,6 @@ See also: [Progressive image encoding](encode.md#progressive-image-encoding)
 | `PNG_COLOR_TYPE_RGBA`       | `SPNG_COLOR_TYPE_TRUECOLOR_ALPHA` |
 | `PNG_COLOR_TYPE_GA`         | `SPNG_COLOR_TYPE_GRAYSCALE_ALPHA` |
 
-
 ## Filter constants
 
 ### Filter values
@@ -363,7 +347,6 @@ Filter choice flags for [`spng_set_option()`](context.md#spng_set_option) when u
 | `PNG_FILTER_AVG`   | `SPNG_FILTER_CHOICE_AVG`   |
 | `PNG_FILTER_PAETH` | `SPNG_FILTER_CHOICE_PAETH` |
 | `PNG_ALL_FILTERS`  | `SPNG_FILTER_CHOICE_ALL`   |
-
 
 ## Miscellaneous functions
 

@@ -25,65 +25,71 @@
 
 #define Z_NULL 0
 
-typedef void* (*alloc_func)(void *opaque, unsigned int items, unsigned int size);
-typedef void (*free_func)(void *opaque, void *address);
+typedef void* (* alloc_func)(void* opaque, unsigned int items, unsigned int size);
+
+typedef void (* free_func)(void* opaque, void* address);
 
 typedef struct z_stream_s
 {
-    const unsigned char *next_in;
-    unsigned int avail_in;
-    unsigned long total_in;
+	const unsigned char* next_in;
+	unsigned int avail_in;
+	unsigned long total_in;
 
-    unsigned char *next_out;
-    unsigned int avail_out;
-    unsigned long total_out;
+	unsigned char* next_out;
+	unsigned int avail_out;
+	unsigned long total_out;
 
-    alloc_func zalloc;
-    free_func  zfree;
-    void *opaque;
+	alloc_func zalloc;
+	free_func zfree;
+	void* opaque;
 
-    int     data_type;
-    unsigned long adler;
-}z_stream;
+	int data_type;
+	unsigned long adler;
+} z_stream;
 
-typedef z_stream *z_streamp;
+typedef z_stream* z_streamp;
 
 int inflateInit(z_streamp strm)
 {
-    if(strm == NULL) return 1;
+	if (strm == NULL)
+	{ return 1; }
 
-    return 0;
+	return 0;
 }
 
 int inflate(z_streamp stream, int flush)
 {
-    if(stream==NULL) return Z_STREAM_ERROR;
+	if (stream == NULL)
+	{ return Z_STREAM_ERROR; }
 
-    if(stream->avail_in == 0 || stream->avail_out == 0) return Z_BUF_ERROR;
+	if (stream->avail_in == 0 || stream->avail_out == 0)
+	{ return Z_BUF_ERROR; }
 
-    stream->next_in += stream->avail_in;
+	stream->next_in += stream->avail_in;
 
-    stream->next_out += stream->avail_out;
+	stream->next_out += stream->avail_out;
 
-    return 0;
+	return 0;
 }
 
 int inflateEnd(z_streamp stream)
 {
-    if(stream==NULL) return 1;
+	if (stream == NULL)
+	{ return 1; }
 
-    return 0;
+	return 0;
 }
 
 int inflateValidate(z_streamp stream, int b)
 {
-    return 0;
+	return 0;
 }
 
-unsigned long crc32(unsigned long crc, const unsigned char *buf, unsigned int len)
+unsigned long crc32(unsigned long crc, const unsigned char* buf, unsigned int len)
 {
-    if(buf==NULL) return 0;
-    return crc+len;
+	if (buf == NULL)
+	{ return 0; }
+	return crc + len;
 }
 
 #endif /* SPNG_FRAMAC_STUBS_H */

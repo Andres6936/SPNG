@@ -21,7 +21,6 @@ libspng version's minor number
 
 libspng version's patch number
 
-
 # Functions
 
 # spng_version_string()

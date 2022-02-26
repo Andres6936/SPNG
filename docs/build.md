@@ -7,8 +7,7 @@
 * Fixed width integer types up to `(u)int32_t`
 * `CHAR_BIT` must equal 8.
 * `size_t` must be unsigned.
-* `size_t` and `int` must be at least 32-bit, 16-bit platforms are not
-supported.
+* `size_t` and `int` must be at least 32-bit, 16-bit platforms are not supported.
 * Floating point support and math functions
 
 ## CMake
@@ -32,8 +31,8 @@ ninja install
 
 ## Embedding the source code
 
-The source files `spng.c`/`spng.h` can be embedded in a project without
-any configuration, SSE2 intrinsics are enabled by default on x86.
+The source files `spng.c`/`spng.h` can be embedded in a project without any configuration, SSE2 intrinsics are enabled
+by default on x86.
 
 ## Build options
 
@@ -59,20 +58,16 @@ Valid values for `SPNG_SSE`:
 
 Currently only SSE2 optimizations are tested.
 
-The source code alone can be built without any compiler flags,
-compiler-specific macros are used to omit the need for options
-such as `-msse2`, `-mssse3`.
+The source code alone can be built without any compiler flags, compiler-specific macros are used to omit the need for
+options such as `-msse2`, `-mssse3`.
 
 ## miniz
 
-[miniz](https://github.com/richgel999/miniz) is a single source file replacement for zlib,
-linking against miniz allows libspng to be embedded into a project with just
-four files: `spng.c`, `miniz.c` and their headers.
+[miniz](https://github.com/richgel999/miniz) is a single source file replacement for zlib, linking against miniz allows
+libspng to be embedded into a project with just four files: `spng.c`, `miniz.c` and their headers.
 
-For building with miniz add the `SPNG_USE_MINIZ` compiler option,
-this handles some minor differences in the API.
-Performance is mostly identical, slightly better in some cases
-compared to stock zlib.
+For building with miniz add the `SPNG_USE_MINIZ` compiler option, this handles some minor differences in the API.
+Performance is mostly identical, slightly better in some cases compared to stock zlib.
 
 ## Profile-guided optimization
 

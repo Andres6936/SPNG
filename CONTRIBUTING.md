@@ -34,8 +34,8 @@ meson configure -Db_sanitize=address,undefined
 
 * Code must be free of undefined behavior
 
-* Code must conform to the rules of the [CERT C Coding Standard](https://wiki.sei.cmu.edu/confluence/display/c/SEI+CERT+C+Coding+Standard).
-
+* Code must conform to the rules of
+  the [CERT C Coding Standard](https://wiki.sei.cmu.edu/confluence/display/c/SEI+CERT+C+Coding+Standard).
 
 # Test
 
@@ -47,8 +47,8 @@ Run the testuite
 
 `ninja test`
 
-All tests should pass, some runtime errors reported by ASan/UBSan do not fail
-a test but are considered bugs, check build/meson-logs/testlog.txt for any errors.
+All tests should pass, some runtime errors reported by ASan/UBSan do not fail a test but are considered bugs, check
+build/meson-logs/testlog.txt for any errors.
 
 # Push
 

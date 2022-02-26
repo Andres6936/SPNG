@@ -69,7 +69,7 @@ ENDIF ()
 
 
 
-IF (BUILD_EXAMPLES)
+IF (SPNG_BUILD_EXAMPLES)
     ADD_EXECUTABLE(examples examples/example.c)
     TARGET_LINK_LIBRARIES(examples PRIVATE Spng::Framework)
 

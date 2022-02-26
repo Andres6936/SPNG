@@ -6,6 +6,7 @@ set(SPNG_MAJOR 0)
 set(SPNG_MINOR 7)
 set(SPNG_REVISION 2)
 set(SPNG_VERSION ${SPNG_MAJOR}.${SPNG_MINOR}.${SPNG_REVISION})
+set(SPNG_BINARY_DIR ${CMAKE_CURRENT_BINARY_DIR})
 
 option(ENABLE_OPT "Enable architecture-specific optimizations" ON)
 option(SPNG_SHARED "Build shared lib" ON)

@@ -13,7 +13,7 @@
 
 #ifdef __FRAMAC__
 																														#define SPNG_DISABLE_OPT
-    #include "tests/framac_stubs.h"
+    #include "Test/framac_stubs.h"
 #else
 #ifdef SPNG_USE_MINIZ
 #include <miniz.h>

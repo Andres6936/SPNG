@@ -39,14 +39,14 @@ common use cases.
 <sup>[1]</sup> The project is fuzz tested on [OSS-Fuzz](https://github.com/google/oss-fuzz) and vulnerabilities are
 fixed before they become public.
 
-<sup>[2]</sup> Building with miniz is [supported](docs/build.md#miniz).
+<sup>[2]</sup> Building with miniz is [supported](Docs/build.md#miniz).
 
 <sup>[3]</sup> With a 3rd party patch
 
 ## Getting spng
 
 Download the [latest release](https://libspng.org/download) and include `spng.c/spng.h` in your project, you can also
-build with CMake or Meson, refer to the [documentation](docs/build.md) for details.
+build with CMake or Meson, refer to the [documentation](Docs/build.md) for details.
 
 ## Usage
 
@@ -101,7 +101,7 @@ free(png);
 spng_ctx_free(enc);
 ```
 
-See [example.c](examples/example.c).
+See [example.c](Examples/example.c).
 
 ## License
 
@@ -120,7 +120,7 @@ The library is continuously fuzzed by [OSS-Fuzz](https://github.com/google/oss-f
 Static Analyzer, Coverity Scan and PVS-Studio.
 
 The test suite consists of over 1000 test cases, 175 [test images](http://www.schaik.com/pngsuite/) are decoded with all
-possible output format and flag combinations and compared against libpng for [correctness](tests/README.md#Correctness).
+possible output format and flag combinations and compared against libpng for [correctness](Test/README.md#Correctness).
 
 ## Versioning
 

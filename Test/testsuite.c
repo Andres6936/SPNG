@@ -320,7 +320,7 @@ static int compare_images(const struct spng_ihdr* ihdr,
 					if (red_diff > max_diff || green_diff > max_diff || blue_diff > max_diff)
 					{
 						printf("invalid gamma correction at x: %" PRIu32 " y: %" PRIu32 ", "
-							   "spng: %" PRIu16 " %" PRIu16 " %" PRIu16 " "
+							   "SPNG: %" PRIu16 " %" PRIu16 " %" PRIu16 " "
 							   "png: %" PRIu16 " %" PRIu16 " %" PRIu16 "\n",
 								x, y,
 								spng_red, spng_green, spng_blue,
@@ -330,7 +330,7 @@ static int compare_images(const struct spng_ihdr* ihdr,
 					else if (sample_diff > max_diff)
 					{
 						printf("invalid gamma correction at x: %" PRIu32 " y: %" PRIu32 ", "
-							   "spng: %" PRIu16 " png: %" PRIu16 "\n", x, y, spng_sample, png_sample);
+							   "SPNG: %" PRIu16 " png: %" PRIu16 "\n", x, y, spng_sample, png_sample);
 						pixel_diff = 1;
 					}
 				}
@@ -344,13 +344,13 @@ static int compare_images(const struct spng_ihdr* ihdr,
 						else
 						{ issue_str = "grayscale difference"; }
 
-						printf("%s at x: %u y: %u spng: %u png: %u\n",
+						printf("%s at x: %u y: %u SPNG: %u png: %u\n",
 								issue_str, x, y, spng_sample, png_sample);
 					}
 					else
 					{
 						printf("color difference at x: %" PRIu32 " y: %" PRIu32 ", "
-							   "spng: %" PRIu16 " %" PRIu16 " %" PRIu16 " "
+							   "SPNG: %" PRIu16 " %" PRIu16 " %" PRIu16 " "
 							   "png: %" PRIu16 " %" PRIu16 " %" PRIu16 "\n",
 								x, y,
 								spng_red, spng_green, spng_blue,
@@ -364,7 +364,7 @@ static int compare_images(const struct spng_ihdr* ihdr,
 			if (have_alpha && spng_alpha != png_alpha)
 			{
 				printf("alpha mismatch at x:%" PRIu32 " y:%" PRIu32 ", "
-					   "spng: %" PRIu16 " png: %" PRIu16 "\n",
+					   "SPNG: %" PRIu16 " png: %" PRIu16 "\n",
 						x, y, spng_alpha, png_alpha);
 				alpha_mismatch = 1;
 			}
@@ -641,7 +641,7 @@ static int compare_chunks(spng_ctx* ctx, png_infop info_ptr, png_structp png_ptr
 
 	const char* pos = after_idat ? " after IDAT" : "before IDAT";
 
-	printf("[%s] spng chunks:  ", pos);
+	printf("[%s] SPNG chunks:  ", pos);
 	print_chunks(spng.have);
 	printf("\n");
 
@@ -864,7 +864,7 @@ static int compare_chunks(spng_ctx* ctx, png_infop info_ptr, png_structp png_ptr
 
 	if (spng.n_text != png.n_text)
 	{
-		printf("text chunk count mismatch: %u(spng), %d(libpng)\n", spng.n_text, png.n_text);
+		printf("text chunk count mismatch: %u(SPNG), %d(libpng)\n", spng.n_text, png.n_text);
 		ret = 1;
 		goto cleanup;
 	}
@@ -874,14 +874,14 @@ static int compare_chunks(spng_ctx* ctx, png_infop info_ptr, png_structp png_ptr
 		{
 			if (strcmp(spng.text[i].keyword, png_text[i].key))
 			{
-				printf("text[%d]: keyword mismatch!\nspng: %s\n\nlibpng: %s\n", i, spng.text[i].keyword,
+				printf("text[%d]: keyword mismatch!\nSPNG: %s\n\nlibpng: %s\n", i, spng.text[i].keyword,
 						png_text[i].key);
 				ret = 1;
 			}
 
 			if (strcmp(spng.text[i].text, png_text[i].text))
 			{
-				printf("text[%d]: text mismatch!\nspng: %s\n\nlibpng: %s\n", i, spng.text[i].text, png_text[i].text);
+				printf("text[%d]: text mismatch!\nSPNG: %s\n\nlibpng: %s\n", i, spng.text[i].text, png_text[i].text);
 				ret = 1;
 			}
 
@@ -890,14 +890,14 @@ static int compare_chunks(spng_ctx* ctx, png_infop info_ptr, png_structp png_ptr
 
 			if (strcmp(spng.text[i].language_tag, png_text[i].lang))
 			{
-				printf("text[%d]: language tag mismatch!\nspng: %s\n\nlibpng: %s\n", i, spng.text[i].language_tag,
+				printf("text[%d]: language tag mismatch!\nSPNG: %s\n\nlibpng: %s\n", i, spng.text[i].language_tag,
 						png_text[i].lang);
 				ret = 1;
 			}
 
 			if (strcmp(spng.text[i].translated_keyword, png_text[i].lang_key))
 			{
-				printf("text[%d]: translated keyword mismatch!\nspng: %s\n\nlibpng: %s\n", i,
+				printf("text[%d]: translated keyword mismatch!\nSPNG: %s\n\nlibpng: %s\n", i,
 						spng.text[i].translated_keyword, png_text[i].lang_key);
 				ret = 1;
 			}
@@ -1081,7 +1081,7 @@ static int compare_chunks(spng_ctx* ctx, png_infop info_ptr, png_structp png_ptr
 
 	if (png.n_unknown_chunks != spng.n_unknown_chunks)
 	{
-		printf("unknown chunk count mismatch: %u(spng), %d(libpng)\n", spng.n_unknown_chunks, png.n_unknown_chunks);
+		printf("unknown chunk count mismatch: %u(SPNG), %d(libpng)\n", spng.n_unknown_chunks, png.n_unknown_chunks);
 		ret = 1;
 		goto cleanup;
 	}
@@ -1091,7 +1091,7 @@ static int compare_chunks(spng_ctx* ctx, png_infop info_ptr, png_structp png_ptr
 		{
 			if (spng.chunks[i].length != png_chunks[i].size)
 			{
-				printf("chunk[%d]: size mismatch %zu (spng) %zu (libpng)\n", i, spng.chunks[i].length,
+				printf("chunk[%d]: size mismatch %zu (SPNG) %zu (libpng)\n", i, spng.chunks[i].length,
 						png_chunks[i].size);
 				ret = 1;
 			}
@@ -1167,7 +1167,7 @@ static int decode_and_compare(spngt_test_case* spng, spngt_test_case* png)
 	if (img_png_size != img_spng_size)
 	{
 		printf("output image size mismatch\n");
-		printf("spng: %lu\n png: %lu\n", (unsigned long int)img_spng_size, (unsigned long int)img_png_size);
+		printf("SPNG: %lu\n png: %lu\n", (unsigned long int)img_spng_size, (unsigned long int)img_png_size);
 		ret = 1;
 		goto cleanup;
 	}
@@ -1378,7 +1378,7 @@ static int spngt_run_test(const char* filename, struct spngt_test_case* test_cas
 		rewind(spng.source.file);
 		ret = extended_tests(spng.source.file, test_case->fmt);
 		if (ret)
-		{ printf("extended tests failed\n"); }
+		{ printf("extended Test failed\n"); }
 	}
 
 cleanup:
@@ -1420,7 +1420,7 @@ int main(int argc, char** argv)
 	{
 		unsigned int png_ver = png_access_version_number();
 
-		printf("spng header version: %u.%u.%u, library version: %s\n",
+		printf("SPNG header version: %u.%u.%u, library version: %s\n",
 				SPNG_VERSION_MAJOR, SPNG_VERSION_MINOR, SPNG_VERSION_PATCH,
 				spng_version_string());
 		printf("png header version: %u.%u.%u, library version: %u.%u.%u\n",
@@ -1477,7 +1477,7 @@ int main(int argc, char** argv)
 /*  With libpng it's not possible to request 8/16-bit images regardless of
     PNG format without calling functions that alias to png_set_expand(_16),
     which acts as if png_set_tRNS_to_alpha() was called, as a result
-    there are no tests where transparency is not applied
+    there are no Test where transparency is not applied
 */
 	int gamma_bug = 0;
 	int skip_encode = 0;
@@ -1512,7 +1512,7 @@ int main(int argc, char** argv)
 	add_test_case(SPNG_FMT_GA16, 0, fmt_limit_2);
 	add_test_case(SPNG_FMT_GA16, SPNG_DECODE_TRNS, fmt_limit_2);
 
-	/* This tests the input->output format logic used in libvips,
+	/* This Test the input->output format logic used in libvips,
 	   it emulates the behavior of their old PNG loader which uses libpng. */
 	add_test_case(SPNGT_FMT_VIPS, SPNG_DECODE_TRNS, 0);
 

@@ -37,7 +37,7 @@ typedef struct spngt_chunk_data
 	uint32_t n_text, n_splt, n_plte_entries, n_unknown_chunks;
 	spngt_chunk_bitfield have;
 
-	/* only meant to be set by spng */
+	/* only meant to be set by SPNG */
 	struct spng_ihdr ihdr;
 	struct spng_plte plte;
 	struct spng_trns trns;

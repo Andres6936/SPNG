@@ -30,11 +30,11 @@ CPMADDPACKAGE(
 # in one go.
 
 # Property: OBJECT
-ADD_LIBRARY(Spng.Framework.Object OBJECT spng/spng.c)
+ADD_LIBRARY(Spng.Framework.Object OBJECT SPNG/spng.c)
 SET_TARGET_PROPERTIES(Spng.Framework.Object PROPERTIES C_STANDARD 11)
 # Link the dependency of zlib
 TARGET_LINK_LIBRARIES(Spng.Framework.Object PUBLIC ZLib::Framework)
-TARGET_INCLUDE_DIRECTORIES(Spng.Framework.Object PUBLIC $<BUILD_INTERFACE:${SPNG_SOURCE_DIR}/spng/>)
+TARGET_INCLUDE_DIRECTORIES(Spng.Framework.Object PUBLIC $<BUILD_INTERFACE:${SPNG_SOURCE_DIR}/SPNG/>)
 # Include of headers of dependency zlib
 TARGET_INCLUDE_DIRECTORIES(Spng.Framework.Object PUBLIC ${ZLIB_BINARY_DIR} ${ZLIB_SOURCE_DIR})
 
@@ -58,7 +58,7 @@ SET_TARGET_PROPERTIES(Spng.Framework.Object PROPERTIES C_STANDARD 11)
 # It is necessary to repeat these instructions again, in case of not doing it, the executables
 # will be unable to locate the Headers needed to perform the linking
 TARGET_LINK_LIBRARIES(Spng.Framework PUBLIC ZLib::Framework)
-TARGET_INCLUDE_DIRECTORIES(Spng.Framework PUBLIC $<BUILD_INTERFACE:${SPNG_SOURCE_DIR}/spng/>)
+TARGET_INCLUDE_DIRECTORIES(Spng.Framework PUBLIC $<BUILD_INTERFACE:${SPNG_SOURCE_DIR}/SPNG/>)
 # Include of headers of dependency zlib
 TARGET_INCLUDE_DIRECTORIES(Spng.Framework PUBLIC ${ZLIB_BINARY_DIR} ${ZLIB_SOURCE_DIR})
 
@@ -70,15 +70,15 @@ ENDIF ()
 
 
 IF (SPNG_BUILD_EXAMPLES)
-    ADD_EXECUTABLE(examples examples/example.c)
-    TARGET_LINK_LIBRARIES(examples PRIVATE Spng::Framework)
+    ADD_EXECUTABLE(Examples Examples/example.c)
+    TARGET_LINK_LIBRARIES(Examples PRIVATE Spng::Framework)
 
     # Reference: https://www.py4u.net/discuss/2364298
-    ADD_CUSTOM_COMMAND(TARGET examples POST_BUILD
+    ADD_CUSTOM_COMMAND(TARGET Examples POST_BUILD
             COMMAND ${CMAKE_COMMAND} -E copy_directory
             "${ZLIB_BINARY_DIR}"
             $<TARGET_FILE_DIR:examples>)
 ENDIF ()
 
 
-ADD_SUBDIRECTORY(tests/)
+ADD_SUBDIRECTORY(Test/)

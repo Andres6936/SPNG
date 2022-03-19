@@ -10,7 +10,7 @@
 /.vscode/
 /.frama-c/
 /trash/
-/tests/formal/
+/Test/formal/
 /site/
 .idea/
 CMakeFiles/

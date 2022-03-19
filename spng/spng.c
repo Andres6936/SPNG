@@ -19,7 +19,7 @@
 #include <miniz.h>
 #else
 
-#include <zlib.h>
+#include <ZLib/zlib.h>
 
 #endif
 #endif

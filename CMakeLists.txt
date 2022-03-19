@@ -18,8 +18,8 @@ INCLUDE(CMakeModules/CPM.cmake)
 # source code of the project is located.
 CPMADDPACKAGE(
         NAME ZLIB
-        GITHUB_REPOSITORY madler/zlib
-        VERSION 1.2.11
+        GITHUB_REPOSITORY Andres6936/ZLib
+        VERSION 1.2.12
 )
 
 
@@ -33,7 +33,7 @@ CPMADDPACKAGE(
 ADD_LIBRARY(Spng.Framework.Object OBJECT spng/spng.c)
 SET_TARGET_PROPERTIES(Spng.Framework.Object PROPERTIES C_STANDARD 11)
 # Link the dependency of zlib
-TARGET_LINK_LIBRARIES(Spng.Framework.Object PUBLIC zlib)
+TARGET_LINK_LIBRARIES(Spng.Framework.Object PUBLIC ZLib::Framework)
 TARGET_INCLUDE_DIRECTORIES(Spng.Framework.Object PUBLIC $<BUILD_INTERFACE:${SPNG_SOURCE_DIR}/spng/>)
 # Include of headers of dependency zlib
 TARGET_INCLUDE_DIRECTORIES(Spng.Framework.Object PUBLIC ${ZLIB_BINARY_DIR} ${ZLIB_SOURCE_DIR})
@@ -57,7 +57,7 @@ ADD_LIBRARY(Spng::Framework ALIAS Spng.Framework)
 SET_TARGET_PROPERTIES(Spng.Framework.Object PROPERTIES C_STANDARD 11)
 # It is necessary to repeat these instructions again, in case of not doing it, the executables
 # will be unable to locate the Headers needed to perform the linking
-TARGET_LINK_LIBRARIES(Spng.Framework PUBLIC zlib)
+TARGET_LINK_LIBRARIES(Spng.Framework PUBLIC ZLib::Framework)
 TARGET_INCLUDE_DIRECTORIES(Spng.Framework PUBLIC $<BUILD_INTERFACE:${SPNG_SOURCE_DIR}/spng/>)
 # Include of headers of dependency zlib
 TARGET_INCLUDE_DIRECTORIES(Spng.Framework PUBLIC ${ZLIB_BINARY_DIR} ${ZLIB_SOURCE_DIR})

@@ -59,8 +59,6 @@ SET_TARGET_PROPERTIES(Spng.Framework.Object PROPERTIES C_STANDARD 11)
 # will be unable to locate the Headers needed to perform the linking
 TARGET_LINK_LIBRARIES(Spng.Framework PUBLIC ZLib::Framework)
 TARGET_INCLUDE_DIRECTORIES(Spng.Framework PUBLIC $<BUILD_INTERFACE:${SPNG_SOURCE_DIR}/SPNG/>)
-# Include of headers of dependency zlib
-TARGET_INCLUDE_DIRECTORIES(Spng.Framework PUBLIC ${ZLIB_BINARY_DIR} ${ZLIB_SOURCE_DIR})
 
 
 IF (NOT ENABLE_OPT)
@@ -76,8 +74,8 @@ IF (SPNG_BUILD_EXAMPLES)
     # Reference: https://www.py4u.net/discuss/2364298
     ADD_CUSTOM_COMMAND(TARGET Examples POST_BUILD
             COMMAND ${CMAKE_COMMAND} -E copy_directory
-            "${ZLIB_BINARY_DIR}"
-            $<TARGET_FILE_DIR:examples>)
+            $<TARGET_FILE_DIR:ZLib::Framework>
+            $<TARGET_FILE_DIR:Examples>)
 ENDIF ()
 
 

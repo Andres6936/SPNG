@@ -1,7 +1,7 @@
 #ifndef SPNGT_COMMON_H
 #define SPNGT_COMMON_H
 
-#include <spng.h>
+#include <SPNG/spng.h>
 
 #include <inttypes.h>
 

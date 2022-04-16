@@ -30,13 +30,11 @@ CPMADDPACKAGE(
 # in one go.
 
 # Property: OBJECT
-ADD_LIBRARY(Spng.Framework.Object OBJECT SPNG/spng.c)
+ADD_LIBRARY(Spng.Framework.Object OBJECT Source/spng.c)
 SET_TARGET_PROPERTIES(Spng.Framework.Object PROPERTIES C_STANDARD 11)
 # Link the dependency of zlib
 TARGET_LINK_LIBRARIES(Spng.Framework.Object PUBLIC ZLib::Framework)
-TARGET_INCLUDE_DIRECTORIES(Spng.Framework.Object PUBLIC $<BUILD_INTERFACE:${SPNG_SOURCE_DIR}/SPNG/>)
-# Include of headers of dependency zlib
-TARGET_INCLUDE_DIRECTORIES(Spng.Framework.Object PUBLIC ${ZLIB_BINARY_DIR} ${ZLIB_SOURCE_DIR})
+TARGET_INCLUDE_DIRECTORIES(Spng.Framework.Object PUBLIC $<BUILD_INTERFACE:${SPNG_SOURCE_DIR}/Include/>)
 
 IF (SPNG_BUILD_SHARED_LIBS)
 
@@ -58,7 +56,7 @@ SET_TARGET_PROPERTIES(Spng.Framework.Object PROPERTIES C_STANDARD 11)
 # It is necessary to repeat these instructions again, in case of not doing it, the executables
 # will be unable to locate the Headers needed to perform the linking
 TARGET_LINK_LIBRARIES(Spng.Framework PUBLIC ZLib::Framework)
-TARGET_INCLUDE_DIRECTORIES(Spng.Framework PUBLIC $<BUILD_INTERFACE:${SPNG_SOURCE_DIR}/SPNG/>)
+TARGET_INCLUDE_DIRECTORIES(Spng.Framework PUBLIC $<BUILD_INTERFACE:${SPNG_SOURCE_DIR}/Include/>)
 
 
 IF (NOT ENABLE_OPT)

@@ -3,7 +3,7 @@
 
 #include "spngt_common.h"
 
-#include <spng.h>
+#include <SPNG/spng.h>
 #include <string.h>
 
 int spng_get_trns_fmt(spng_ctx* ctx, int* fmt)

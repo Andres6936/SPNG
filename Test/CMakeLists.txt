@@ -8,13 +8,12 @@ CPMADDPACKAGE(
 )
 
 ADD_EXECUTABLE(libspng.testsuit testsuite.c)
-TARGET_INCLUDE_DIRECTORIES(libspng.testsuit PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/spng)
-TARGET_LINK_LIBRARIES(libspng.testsuit spng ZLib::Framework Png.Framework)
+TARGET_LINK_LIBRARIES(libspng.testsuit Spng::Framework ZLib::Framework Png.Framework)
 
 # Reference: https://www.py4u.net/discuss/2364298
 ADD_CUSTOM_COMMAND(TARGET libspng.testsuit POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_directory
-        ${SPNG_BINARY_DIR}
+        $<TARGET_FILE_DIR:Spng::Framework>
         $<TARGET_FILE_DIR:libspng.testsuit>)
 
 # Reference: https://www.py4u.net/discuss/2364298

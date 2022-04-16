@@ -7,7 +7,7 @@
 #define SPNGT_LITTLE_ENDIAN
 #endif
 
-#include <png.h>
+#include <PNG/png.h>
 
 #include "spngt_common.h"
 
